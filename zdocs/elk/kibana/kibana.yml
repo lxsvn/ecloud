@@ -1,0 +1,6 @@
+server.port: 5601
+server.host: "0.0.0.0"
+# elasticsearch的ip。不能用localhost，用宿主机内网IP。因为是不同容器
+elasticsearch.hosts: ["http://172.29.33.23:9200"]
+# 操作界面语言设置为中文
+i18n.locale: "zh-CN"

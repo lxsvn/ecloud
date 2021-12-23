@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ec.account.dao.AccountDao">
+
+    <update id="decrease">
+        update t_account
+        set residue = residue - #{money},
+            used    = used + #{money}
+        where user_id = #{userId};
+    </update>
+
+    <select id="infoByUserId" resultType="com.ec.commons.entities.po.account.AccountPO">
+        select *
+        from t_account
+        where user_id = #{userId};
+    </select>
+
+    <select id="infoByMobile" resultType="com.ec.commons.entities.po.account.AccountPO">
+        select *
+        from t_account
+        where mobile = #{mobile};
+    </select>
+
+    <select id="infoByNativeId" resultType="com.ec.commons.entities.po.account.AccountPO">
+        select *
+        from t_account
+        where native_id = #{nativeId};
+    </select>
+
+    <select id="login" resultType="com.ec.commons.entities.po.account.AccountPO">
+        select *
+        from t_account
+        where mobile = #{mobile}
+          and pwd = #{pwd};
+    </select>
+    <insert id="register">
+        INSERT INTO `t_account`
+            (native_id, `total`, `used`, `residue`, `mobile`, `name`, `pwd`)
+        VALUES (#{nativeId}, #{total}, 0, 0, #{mobile}, #{name}, #{pwd})
+
+    </insert>
+
+</mapper>
