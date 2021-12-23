@@ -1,0 +1,64 @@
+server:
+  port: 71
+
+spring:
+  application:
+    name: ecloud-int-order-service
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.104.247.85:8848
+
+    # 配置读写分离 & 分表
+  shardingsphere:
+    # 读写分离数据源：一主、一从
+    datasource:
+      names: d0,d1
+      d0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.247.85:3306/seata_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: E@w123456
+      d1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.247.85:3307/seata_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: E@w123456
+
+    # 配置分片。
+    # 自带读写分离master-slave-rules：。
+    sharding:
+      tables:
+        #订单表分片
+        t_order:
+          actual-data-nodes: d0.t_order_$->{0..3}
+          table-strategy:
+            #标准分片场景
+            #            inline:
+            #              sharding-column: order_no #分片列名称，多个列以逗号分隔
+            #              algorithm-expression: t_order_$->{order_no % 3}
+            standard: #自定义分片。用于单分片键的标准分片场景
+              sharding-column: order_no
+              precise-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmConfig
+              range-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmConfig
+
+      master-slave-rules:
+        d0:
+          master-data-source-name: d0
+          slave-data-source-names: d1
+
+    # 打开sql输出日志
+    props:
+      sql:
+        show: true
+
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  #数据表的字段下划线转驼峰开启
+  configuration:
+    map-underscore-to-camel-case: true
