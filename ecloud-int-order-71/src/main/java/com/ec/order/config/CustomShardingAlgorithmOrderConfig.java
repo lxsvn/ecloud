@@ -19,7 +19,7 @@ import java.util.Collection;
  *
  * 按需选择
  * */
-public class CustomShardingAlgorithmConfig implements PreciseShardingAlgorithm, RangeShardingAlgorithm {
+public class CustomShardingAlgorithmOrderConfig implements PreciseShardingAlgorithm, RangeShardingAlgorithm {
 
 
     /**

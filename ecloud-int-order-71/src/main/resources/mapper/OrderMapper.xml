@@ -18,11 +18,11 @@
     <insert id="createOrderItems">
 
         INSERT INTO t_order_item
-            (order_no,pid,quantity,unit_price)
+            (order_no,sno,quantity,unit_price)
         VALUES
         <foreach collection="items" item="item" separator=",">
 
-            (#{orderNo},#{item.pid},#{item.quantity},#{item.unitPrice})
+            (#{orderNo},#{item.sno},#{item.quantity},#{item.unitPrice})
 
         </foreach>
     </insert>

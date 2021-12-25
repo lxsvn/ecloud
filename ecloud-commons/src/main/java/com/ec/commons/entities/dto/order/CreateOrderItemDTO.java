@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CreateOrderItemDTO {
-    private int pid;
+    private String sno;
     private int quantity;
 }

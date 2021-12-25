@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ec.product.dao.ProductDao">
+
+    <insert id="add">
+        INSERT into t_product
+            (sno, `name`, stock_total, stock_used, stock_residue, create_time,update_time)
+        VALUES (#{sno}, #{name}, #{stockTotal}, #{stockUsed}, #{stockTotal},#{createTime}, #{updateTime})
+
+    </insert>
+
+    <select id="getProductInfoBySno" resultType="com.ec.commons.entities.po.product.ProductPO">
+        select *
+        from t_product
+        where sno = #{sno};
+    </select>
+
+    <update id="deductStock" >
+        update t_product set
+                 stock_used = stock_used + #{quantity},
+                 stock_residue=stock_residue - #{quantity}
+        where sno=#{sno};
+    </update>
+
+
+</mapper>

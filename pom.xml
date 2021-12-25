@@ -13,6 +13,9 @@
         <module>ecloud-int-account-91</module>
         <module>ecloud-uid-generator-api-88</module>
         <module>ecloud-int-order-71</module>
+        <module>ecloud-int-product-61</module>
+        <module>infrastructure/ecloud-initialize-10</module>
+        <module>canal-consumer-sync-service-1001</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -48,7 +51,6 @@
         <kafka.version>2.4.1.RELEASE</kafka.version>
         <mybatis.spring.boot.version>1.3.0</mybatis.spring.boot.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
