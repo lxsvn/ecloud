@@ -25,6 +25,13 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: product_route
+          uri: lb://ecloud-int-product-service
+          predicates:
+            - Path=/product-svc/**
+          filters:
+            - StripPrefix=1
+
   redis:
     database: 2
     #redis服务器地址

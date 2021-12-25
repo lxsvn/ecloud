@@ -19,13 +19,13 @@ spring:
       d0:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.247.85:3306/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
       d1:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3307/uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.247.85:3307/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
 

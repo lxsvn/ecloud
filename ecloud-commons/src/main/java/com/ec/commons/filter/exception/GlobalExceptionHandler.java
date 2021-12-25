@@ -35,19 +35,6 @@ public class GlobalExceptionHandler {
         return R.fail(RetCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
-    /**
-     * 自定义
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(BaseException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public R<Object> baseException(BaseException e) {
-        int code = e.getErrorCode();
-        String message = e.getMessage();
-        return R.fail(code, message);
-    }
 
     /**
      * 获取@NotBlank，@NotNull等注解的message信息

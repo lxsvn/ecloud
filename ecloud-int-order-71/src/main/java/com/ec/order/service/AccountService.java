@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(value = "ecloud-int-account", fallback = AccountServiceFallbak.class)
+@FeignClient(value = "ecloud-int-account-service", fallback = AccountServiceFallbak.class)
 public interface AccountService {
 
     @GetMapping("/account/info/userid/{userId}")
