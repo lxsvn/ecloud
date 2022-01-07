@@ -8,18 +8,16 @@
 
 启动nacos:
 
-- 现在本地新建application.properties,再进行-v挂载
+- 先在本地新建application.properties,再进行-v挂载
 - 挂在文件夹不存在的，需先新建
 
 ```shell
-docker run \
--e JVM_XMS=256m -e JVM_XMX=256m \
---env MODE=standalone  \
--v /home/nacos/logs:/home/nacos/logs \
--v /home/nacos/conf/application.properties:/home/nacos/conf/application.properties \
---name nacos -d \
--p 8848:8848 \
-nacos/nacos-server:2.0.3
+# 新建挂载目录
+mkdir -p /home/nacos/logs /home/nacos/conf/
+chmod -R 777 /home/nacos
+
+touch /home/nacos/conf/application.properties
+
 
 ```
 
@@ -28,6 +26,10 @@ nacos/nacos-server:2.0.3
 mysql 8.0以上，url参数需加上：serverTimezone=GMT%2B8
 
 ```yaml
+
+# 建库文件
+wget https://github.com/alibaba/nacos/blob/master/distribution/conf/nacos-mysql.sql
+
 # spring
 server.servlet.contextPath=${SERVER_SERVLET_CONTEXTPATH:/nacos}
 server.contextPath=/nacos
@@ -38,9 +40,9 @@ nacos.cmdb.eventTaskInterval=10
 nacos.cmdb.labelTaskInterval=300
 nacos.cmdb.loadDataAtStart=false
 db.num=1
-db.url.0=jdbc:mysql://12.3.4.5:3306/nacos_config?serverTimezone=GMT%2B8&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
+db.url.0=jdbc:mysql://172.29.33.25:3306/ecloud_nacos_config?serverTimezone=GMT%2B8&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
 db.user=root
-db.password=root
+db.password=E@w123456
 ### The auth system to use, currently only 'nacos' is supported:
 nacos.core.auth.system.type=${NACOS_AUTH_SYSTEM_TYPE:nacos}
 
@@ -74,6 +76,18 @@ nacos.naming.distro.initDataRatio=0.9
 nacos.naming.distro.syncRetryDelay=5000
 nacos.naming.data.warmup=true
 
+```
+
+```shell
+#启动 设置账号密码
+docker run \
+-e JVM_XMS=256m -e JVM_XMX=256m \
+--env MODE=standalone  \
+-v /home/nacos/logs:/home/nacos/logs \
+-v /home/nacos/conf/application.properties:/home/nacos/conf/application.properties \
+--name nacos -d \
+-p 8848:8848 -p 9848:9848 -p 9849:9849 \
+nacos/nacos-server:2.0.3
 ```
 
 ## sentinel

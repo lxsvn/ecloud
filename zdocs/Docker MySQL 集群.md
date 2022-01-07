@@ -9,7 +9,7 @@ docker pull mysql:8.0.27
 ### 1. 创建网络（失败报错执行：docker swarm init）
 
 ```shell
-docker network create --driver overlay common-network --attachable
+docker network create --driver overlay mysql-network --attachable
 ```
 
 ### 创建挂载目录
@@ -46,7 +46,7 @@ default-character-set=utf8
 # 2.1 创建主 master
 docker run -d \
 --name mysql-master \
---network common-network \
+--network mysql-network \
 --restart=always \
 -e MYSQL_ROOT_PASSWORD=E@w123456 \
 -e TZ=Asia/Shanghai \
@@ -59,7 +59,7 @@ docker run -d \
 # 2.2 创建从slave (无需挂载。因为master挂了)
 docker run -d \
 --name mysql-slave \
---network common-network \
+--network mysql-network \
 -e MYSQL_ROOT_PASSWORD=E@w123456 \
 -e TZ=Asia/Shanghai \
 -p 3307:3306 \
@@ -70,7 +70,7 @@ docker run -d \
 
 ```shell
 # 3.1 配置主 master
-docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-master -uroot -pE@w123456 \
+docker run -it --rm --network mysql-network mysql:8.0.27 mysql -hmysql-master -uroot -pE@w123456 \
 -e "SET PERSIST server_id=1;" \
 -e "SET PERSIST_ONLY gtid_mode=ON;" \
 -e "SET PERSIST_ONLY enforce_gtid_consistency=true; " \
@@ -79,7 +79,7 @@ docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-master -
 
 
 # 3.2 配置从slave
-docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 \
+docker run -it --rm --network mysql-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 \
 -e "SET PERSIST server_id=2;" \
 -e "SET PERSIST_ONLY gtid_mode=ON;" \
 -e "SET PERSIST_ONLY enforce_gtid_consistency=true; "
@@ -95,7 +95,7 @@ docker restart mysql-master mysql-slave
 ### 5. 链接 master & slave
 
 ```shell
-docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 \
+docker run -it --rm --network mysql-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 \
 -e "CHANGE MASTER TO MASTER_HOST='mysql-master', MASTER_PORT=3306, MASTER_USER='repl', MASTER_PASSWORD='password', MASTER_AUTO_POSITION=1, MASTER_SSL=1;" \
 -e "START SLAVE;" 
 ```
@@ -104,10 +104,10 @@ docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-slave -u
 
 ```shell
 # 验证slave状态
-docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 -e "show slave status\G"
+docker run -it --rm --network mysql-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 -e "show slave status\G"
 
 # 查看slave数据库同步状态
-docker run -it --rm --network common-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 \
+docker run -it --rm --network mysql-network mysql:8.0.27 mysql -hmysql-slave -uroot -pE@w123456 \
  -e "show databases;"
 
 ```

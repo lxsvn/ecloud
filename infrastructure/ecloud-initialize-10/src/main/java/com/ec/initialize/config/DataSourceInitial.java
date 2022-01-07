@@ -12,6 +12,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -25,6 +26,7 @@ import java.util.LinkedHashMap;
 public class DataSourceInitial implements ApplicationRunner {
     @Value("${spring.initials.enable}")
     private boolean enable;
+
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

@@ -5,36 +5,45 @@ spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: ecloud-int-account-service
+    name: ecloud-int-initialize
 
   initials:
-    enable: false #是否执行初始化。默认false，初始化成功后，改为false
+    enable: true #是否执行初始化。默认false，初始化成功后，改为false
     datasource:
-      names: d0,d1,d2,d3 #只能d0、d1、d2...
+      names: d0,d1,d2,d3,d4 #只能d0、d1、d2...
       d0:
         driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
         initialization-mode: always
         schema: classpath:scripts/account/*.sql
       d1:
         driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
         initialization-mode: always
         schema: classpath:scripts/order/*.sql
       d2:
         driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_product?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_product?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
       d3:
         driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
+        initialization-mode: always
+        schema: classpath:scripts/uidgenerator/*.sql
+      d4:
+        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_canal_manager?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: E@w123456
+        initialization-mode: always
+        schema: classpath:scripts/canalmanager/*.sql
 
 
 

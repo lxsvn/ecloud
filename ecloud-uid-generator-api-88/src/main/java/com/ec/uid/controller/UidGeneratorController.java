@@ -1,5 +1,6 @@
 package com.ec.uid.controller;
 
+import com.ec.apis.uid.IUidGeneratorService;
 import com.ec.commons.util.ret.R;
 import com.github.wujun234.uid.UidGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +22,11 @@ import javax.annotation.Resource;
 public class UidGeneratorController {
 
     @Resource
-    private UidGenerator cachedUidGenerator;
+    private IUidGeneratorService uidGeneratorService;
 
     @GetMapping(value = "/get")
     public R getCachedUid() {
-        Long uid = cachedUidGenerator.getUID();
+        Long uid = uidGeneratorService.getCachedUid();
 
         //System.out.println(cachedUidGenerator.parseUID(uid));
         return R.success("获取成功", uid);

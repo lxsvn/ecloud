@@ -41,9 +41,32 @@ docker run \
 -p 6379:6379 \
 --name redis  \
 --restart=always \
--v /home/redis/conf/redis.conf:/etc/redis/redis.conf \
+-v /home/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf \
 -v /home/redis/data:/data \
--d redis:6.2 redis-server /etc/redis/redis.conf --appendonly yes 
+-d redis:6.2 redis-server /usr/local/etc/redis/redis.conf --appendonly yes 
+
+
+# redis-server：指定以配置文件启动
+# --appendonly yes 持久化
 
 ```
 
+
+
+
+
+## docker-compose.yaml
+```yaml
+version: '3'
+
+services:
+  redis:
+    image: redis:6.2
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - /home/redis/conf/redis.conf:/etc/redis/redis.conf:rw
+      - /home/redis/data:/data:rw
+```

@@ -33,6 +33,8 @@ sh mqnamesrv
 
 # 运行broker 
 
+touch  /home/rocketmq/conf/broker.conf
+
 # 0.本机新建broker.conf并配置
 brokerClusterName = DefaultCluster
 brokerName = broker-a
@@ -67,8 +69,9 @@ sh mqbroker -c /home/rocketmq/conf/broker.conf
 docker pull styletang/rocketmq-console-ng:latest
 
 # 控制台启动
-docker run \
--e "JAVA_OPTS=-Drocketmq.namesrv.addr=47.104.247.85:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false" \
+docker run -d \
+--name  rocketmq-console-ng \
+-e "JAVA_OPTS=-Drocketmq.namesrv.addr=47.104.80.250:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false" \
 -p 8180:8080 -t styletang/rocketmq-console-ng:latest
 ```
 

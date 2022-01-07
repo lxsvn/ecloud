@@ -1,0 +1,35 @@
+server:
+  port: 1001
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: canal-consumer-sync-service-1001
+  cloud:
+    nacos: #dataId 的完整格式: ${prefix}-${spring.profiles.active}.${file-extension}
+      server-addr: 47.104.80.250:8848 #配置Nacos地址
+  #      config:
+  #        prefix: canal-consumer  # 默认spring.application.name
+  #        file-extension: yaml  #支持 properties 和 yaml 类型
+  #        namespace: dev-01
+  #        group: DEV_GROUP
+  #        encode: UTF-8
+
+  redis:
+    database: 2
+    #redis服务器地址
+    host: 47.104.80.250
+    #redis连接端口号
+    port: 6379
+    #redis连接密码
+    password: ED888888
+    #redis连接超时时间（毫秒）
+    timeout: 10000
+
+rocketmq:
+  name-server: 47.104.80.250:9876
+  # 消费者配置
+  consumer:
+    # 与canal后台server管理canal.properties中，配置的rocketmq.producer.group一致
+    # 自定义。确保producer分布式下消息的一致，
+    group: canal_sync_group

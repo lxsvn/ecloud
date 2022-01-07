@@ -2,12 +2,15 @@ package com.ec.canal.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.ec.canal.model.base.BaseModelInfo;
+import com.ec.commons.constant.RedisKeyConstant;
 import com.ec.commons.entities.po.product.ProductPO;
-import com.ec.commons.middleware.redis.RedisUtil;
+import com.edward.redis.template.RedisUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,11 +28,12 @@ import java.util.List;
 @RocketMQMessageListener(
         topic = "canal_sync_t_product",
         selectorExpression = "*",
-        consumerGroup = "1001x1")
+        consumerGroup = "1001x8")
+@AllArgsConstructor
 public class ConsumerCanalFromRocketMQ implements RocketMQListener<MessageExt> {
 
-    @Resource
-    private RedisUtil redisTemplate;
+
+    private RedisUtil redisUtil;
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -37,20 +41,21 @@ public class ConsumerCanalFromRocketMQ implements RocketMQListener<MessageExt> {
         String msg = new String(body);
         BaseModelInfo baseInfo =
                 JSON.parseObject(msg, BaseModelInfo.class);
-        //log.info("revive msg:" + msg);
-        //当前topic只监听seata_accout.t_account
-        //所以不用再判断数据库和表
-        //根据不同的表区分解析
+
+        //不用再判断数据库和表，因为canal监听时，在instance处已配置
 
         //反序列化
         List<ProductPO> list =
                 JSON.parseArray(baseInfo.getData(), ProductPO.class);
 
         //更新redis
-//        list.forEach(item -> {
-//            redisTemplate.set("user_" + item.getUserId(),
-//                    JSON.toJSONString(item));
-//        });
+        list.forEach(item -> {
+            log.info("canal push msg:" + item.getSno());
+
+            redisUtil.set(RedisKeyConstant.PRODUCT_INFO + item.getSno(),
+                    JSON.toJSONString(item));
+
+        });
 
 
     }

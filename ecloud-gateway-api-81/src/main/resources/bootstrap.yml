@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: ecloud-gateway-api
+  cloud:
+    nacos: #dataId 的完整格式: ${prefix}-${spring.profiles.active}.${file-extension}
+      server-addr: 47.104.80.250:8848 #配置Nacos地址
+      username: nacos
+      password: nacos
+      config:
+        prefix: ecloud-gateway  # 默认spring.application.name
+        file-extension: yaml  #支持 properties 和 yaml 类型
+        namespace: dev-01
+        group: DEV_GROUP
+
+
+

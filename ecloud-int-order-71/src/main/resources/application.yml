@@ -9,60 +9,81 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 47.104.247.85:8848
+        server-addr: 47.104.80.250:8848
 
-    # 配置读写分离 & 分表
+  # 配置读写分离 & 分表
   shardingsphere:
     # 读写分离数据源：一主、一从
     datasource:
       names: d0,d1
       d0:
         type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        driver-class-name: com.mysql.cj.jdbc.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
       d1:
         type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3307/ecloud_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        driver-class-name: com.mysql.cj.jdbc.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3307/ecloud_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
 
-    # 配置分片。
-    # 自带读写分离master-slave-rules：。
-    sharding:
-      tables:
-        #订单主表分片
-        t_order:
-          actual-data-nodes: d0.t_order_$->{0..3}
-          table-strategy:
-            standard: #自定义分片。用于单分片键的标准分片场景
-              sharding-column: order_no
-              precise-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmOrderConfig
-              range-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmOrderConfig
-        #订单从表分片
-        t_order_item:
-          actual-data-nodes: d0.t_order_itme_$->{0..2}
-          table-strategy:
-            standard:
-              sharding-column: order_no
-              precise-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmOrderItemConfig
-              range-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmOrderItemConfig
+    rules:
+      sharding:
+        tables:
+          #订单主表分片
+          t_order:
+            actual-data-nodes: d0.t_order_$->{0..3}
+            table-strategy:
+              standard: #自定义分片。用于单分片键的标准分片场景
+                sharding-column: order_no
+                sharding-algorithm-name: t-order-inline
+          #                precise-algorithm-class-name: com.ec.order.config.CustomShardingAlgorithmOrderConfig
+          #                range-algorithm-class-name:   com.ec.order.config.CustomShardingAlgorithmOrderConfig
+          #订单从表分片
+          t_order_item:
+            actual-data-nodes: d0.t_order_item_$->{0..1}
+            table-strategy:
+              standard:
+                sharding-column: order_no
+                sharding-algorithm-name: t-order-item-inline
 
+        sharding-algorithms:
+          t-order-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_no % 3}
+          t-order-item-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_item_$->{order_no % 1}
 
-      master-slave-rules:
-        d0:
-          master-data-source-name: d0
-          slave-data-source-names: d1
+      # 读写分离
+      readwrite-splitting:
+        load-balancers:
+          round_robin:
+            type: ROUND_ROBIN
+        data-sources:
+          pr_ds:
+            write-data-source-name: d0
+            read-data-source-names: d1
+            load-balancer-name: round_robin
 
     # 打开sql输出日志
     props:
-      sql:
-        show: true
+      sql-show: true
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   #数据表的字段下划线转驼峰开启
   configuration:
     map-underscore-to-camel-case: true
+
+dubbo:
+  protocol:
+    port: -1
+  scan:
+    base-packages: com.ec.order.service.impl
+  registry:
+    address: zookeeper://47.104.80.250:2181

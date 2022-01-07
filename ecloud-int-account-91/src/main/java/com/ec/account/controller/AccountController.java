@@ -8,21 +8,19 @@ import com.ec.commons.entities.dto.account.AccountInfoDTO;
 import com.ec.commons.entities.vo.account.AccountVO;
 import com.ec.commons.util.BeanUtils;
 import com.ec.commons.util.ret.R;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 
 
 @RestController
 @RequestMapping("/account")
-@Slf4j
+@AllArgsConstructor
 public class AccountController extends BaseController {
 
-    @Resource
-    private AccountService accountService;
+    private final AccountService accountService;
 
     @GetMapping(value = "/info")
     public R info() {

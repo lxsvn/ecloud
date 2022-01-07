@@ -20,6 +20,21 @@ yum install docker-ce docker-ce-cli containerd.io
 systemctl start docker
 ```
 
+# docker-compose
+
+```shell
+
+# 安装
+curl -L https://get.daocloud.io/docker/compose/releases/download/v2.2.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+
+# 授权
+chmod +x /usr/local/bin/docker-compose
+
+# 查看版本
+docker-compose version
+
+```
+
 # docker 配置
 
 删除全部容器：
@@ -41,7 +56,7 @@ docker start 容器id
 # 在Dockerfile文件同目录下，执行。（最后有个. !!!!!表示上下文）：
 docker build -t seata-account-service-2003:1.0 .
 ```
-
+docker build -t ecloud/uid-generator:1.0 .
 重启容器
 
 ```shell

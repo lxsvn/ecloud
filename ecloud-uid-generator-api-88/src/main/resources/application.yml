@@ -9,44 +9,47 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 47.104.247.85:8848 #配置Nacos地址
+        server-addr: 47.104.80.250:8848
 
-    # 配置读写分离 & 分表
+  # 配置读写分离 & 分表
   shardingsphere:
     # 读写分离数据源：一主、一从
     datasource:
       names: d0,d1
       d0:
         type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        driver-class-name: com.mysql.cj.jdbc.Driver       #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
       d1:
         type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3307/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        driver-class-name: com.mysql.cj.jdbc.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3307/ecloud_uid_generator?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
 
-    # 配置读写分离 & 负载均衡算法
-    # 只需要读写分离，无需配置sharding:
-    masterslave:
-      load-balance-algorithm-type: round_robin
-      name: ms
-      master-data-source-name: d0
-      slave-data-source-names: d1
+    # 读写分离：
+    rules:
+      readwrite-splitting:
+        load-balancers:
+          round_robin:
+            type: ROUND_ROBIN
+        data-sources:
+          pr_ds:
+            write-data-source-name: d0
+            read-data-source-names: d1
+            load-balancer-name: round_robin
 
     # 打开sql输出日志
     props:
-      sql:
-        show: true
+      sql-show: true
 
 uid:
   timeBits: 30             # 时间位, 默认:30
   workerBits: 16           # 机器位, 默认:16
   seqBits: 7               # 序列号, 默认:7
-  epochStr: "2021-12-20"   # 初始时间, 默认:"2021-12-20"
+  epochStr: "2022-01-05"   # 初始时间, 默认:"2021-12-20"
   enableBackward: true    # 是否容忍时钟回拨, 默认:true
   maxBackwardSeconds: 1    # 时钟回拨最长容忍时间（秒）, 默认:1
   CachedUidGenerator: # CachedUidGenerator相关参数
@@ -54,4 +57,10 @@ uid:
     paddingFactor: 50      # 指定何时向RingBuffer中填充UID, 取值为百分比(0, 100), 默认为50
     #scheduleInterval: 60    # 默认:不配置此项, 即不使用Schedule线程. 如需使用, 请指定Schedule线程时间间隔, 单位:秒
 
-
+dubbo:
+  scan:
+    base-packages: com.ec.uid.service.impl
+  protocol:
+    port: -1
+  registry:
+    address: zookeeper://47.104.80.250:2181

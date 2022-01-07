@@ -5,64 +5,57 @@ spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: ecloud-int-account
+    name: ecloud-int-account-service
   cloud:
     nacos:
       discovery:
-        server-addr: 47.104.247.85:8848 #配置Nacos地址
-
-    # 配置读写分离 & 分表
-  shardingsphere:
-    # 读写分离数据源：一主、一从
-    datasource:
-      names: d0,d1
-      d0:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3306/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
-        password: E@w123456
-      d1:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: org.gjt.mm.mysql.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.247.85:3307/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
-        password: E@w123456
-
-    # 配置读写分离 & 负载均衡算法
-    # 只需要读写分离，无需配置sharding:
-    masterslave:
-      load-balance-algorithm-type: round_robin
-      name: ms
-      master-data-source-name: d0
-      slave-data-source-names: d1
-
-    # 打开sql输出日志
-    props:
-      sql:
-        show: true
-
+        server-addr: 47.104.80.250:8848 #配置Nacos地址
   redis:
     database: 2
     #redis服务器地址
-    host: 47.104.247.85
+    host: 47.104.80.250
     #redis连接端口号
     port: 6379
     #redis连接密码
     password: ED888888
     #redis连接超时时间（毫秒）
     timeout: 10000
-    # 高版本springboot中使用jedis或者lettuce
-    lettuce:
-      pool:
-        # 连接池最小空闲连接
-        min-idle: 1
-        # 连接池最大空闲连接
-        max-idle: 10
-        # 连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1
-        # 连接池最大连接数（使用负值表示没有限制）
-        max-active: -1
+
+  # 配置读写分离 & 分表
+  shardingsphere:
+    # 读写分离数据源：一主、一从
+    datasource:
+      names: d0,d1
+      d0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver       #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3306/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: E@w123456
+      d1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver        #mysql驱动包
+        url: jdbc:mysql://47.104.80.250:3307/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: E@w123456
+
+    # 读写分离：
+    rules:
+      readwrite-splitting:
+        load-balancers:
+          round_robin:
+            type: ROUND_ROBIN
+        data-sources:
+          pr_ds:
+            write-data-source-name: d0
+            read-data-source-names: d1
+            load-balancer-name: round_robin
+
+    # 打开sql输出日志
+    props:
+      sql-show: true
+
+
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml

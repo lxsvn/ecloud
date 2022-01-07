@@ -1,14 +1,14 @@
 package com.ec.canal;
 
-import com.ec.commons.middleware.redis.RedisConfig;
-import com.ec.commons.middleware.redis.RedisUtil;
+import com.edward.redis.annotation.EnableRedis;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 
 @SpringBootApplication
-@Import({RedisConfig.class, RedisUtil.class})
+@EnableRedis
+@RefreshScope
 public class CanalConsumerMainApp1001 {
     public static void main(String[] args) {
         SpringApplication.run(CanalConsumerMainApp1001.class, args);

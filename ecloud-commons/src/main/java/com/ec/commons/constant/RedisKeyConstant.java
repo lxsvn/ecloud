@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class RedisKeyConstant {
     public static final String AUTH_TOKEN = "login:";
+    public static final String PRODUCT_INFO = "pdinfo:";
 }

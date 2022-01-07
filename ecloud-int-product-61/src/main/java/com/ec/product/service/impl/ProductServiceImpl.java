@@ -1,26 +1,23 @@
 package com.ec.product.service.impl;
 
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.lang.Snowflake;
-import com.ec.commons.entities.bo.account.AccountBO;
-import com.ec.commons.entities.bo.account.RegisterBO;
+import com.ec.apis.product.IProductService;
 import com.ec.commons.entities.bo.product.AddProductBO;
 import com.ec.commons.entities.bo.product.ProductBO;
 import com.ec.commons.entities.dto.product.AddProductDTO;
+import com.ec.commons.entities.dto.product.DeductStockDTO;
 import com.ec.commons.entities.po.product.ProductPO;
 import com.ec.commons.util.BeanUtils;
 import com.ec.commons.util.SnowflakeUtil;
-import com.ec.commons.util.UUIDUtil;
 import com.ec.product.dao.ProductDao;
-import com.ec.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.apache.dubbo.config.annotation.DubboService;
 
 import javax.annotation.Resource;
 
-@Service
+@DubboService
 @Slf4j
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements IProductService {
     @Resource
     private ProductDao productDao;
 
@@ -40,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductBO getProductInfoBySno(String sno) {
+    public Object getProductInfoBySno(String sno) {
         ProductPO info = productDao.getProductInfoBySno(sno);
 
         ProductBO bo = BeanUtils.toBean(info, ProductBO.class);
@@ -48,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deductStock(String sno, int quantity) {
-        productDao.deductStock(sno, quantity);
+    public void deductStock(DeductStockDTO dto) {
+        productDao.deductStock(dto.getSno(), dto.getQuantity());
     }
 }
