@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `t_order_2`;
 CREATE TABLE `t_order_2`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT,
   `order_no` bigint(0) NOT NULL,
-  `native_id` varbinary(16) NOT NULL,
+  `native_id` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `status` int(0) NOT NULL,
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
