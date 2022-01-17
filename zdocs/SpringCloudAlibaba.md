@@ -134,8 +134,8 @@ seataio/seata-server:1.4.2
 # 3 配置并初始化seata
 
 ## 3.1 创建配置文件
-https://github.com/seata/seata/tree/develop/script/config-center/nacos
-在/home/seata-server下，分别创建config.txt、file.conf、registry.conf、nacos-config.sh
+#https://github.com/seata/seata/tree/develop/script/config-center/nacos
+#在/home/seata-server下，分别创建config.txt、file.conf、registry.conf、nacos-config.sh
 
 ##运行nacos-config.sh，使得配置到nacos
 sh nacos-config.sh -h 47.104.247.85 -g SEATA_GROUP

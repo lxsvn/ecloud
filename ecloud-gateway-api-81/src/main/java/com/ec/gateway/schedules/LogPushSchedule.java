@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Slf4j
 public class LogPushSchedule {
 
-    private final String TOPIC_NAME = "shop_api_gateway_log";
+    private final String TOPIC_NAME = "ecloud_api_gateway_log";
     @Resource
     private KafkaTemplate<String, String> kafkaTemplate;
 

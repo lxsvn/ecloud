@@ -35,26 +35,28 @@ docker run  -d \
 docker pull obsidiandynamics/kafdrop:latest
 
 # 运行
-docker run -d --rm -p 9000:9000 \
+docker run -d  -p 9000:9000 \
 --name kafdrop \
--e KAFKA_BROKERCONNECT=172.29.33.23:9092 \
+-e KAFKA_BROKERCONNECT=172.29.33.25:9092 \
 -e JVM_OPTS="-Xms32M -Xmx64M" \
 -e SERVER_SERVLET_CONTEXTPATH="/" \
 obsidiandynamics/kafdrop:latest
 ```
 
-## zookeeper 后台
+## zookeeper 后台（zkui ）
 ```shell
 
-# 拉取
-docker pull qnib/zkui
 
-# 运行
-docker run -d -it \
+#账号密码：admin/manager
+
+```shell
+#
+docker run -d \
 --name zkui \
 -p 9090:9090 \
--e ZKUI_ZK_SERVER=172.29.33.23:2181 \
-qnib/zkui
+-e ZK_SERVER=172.29.33.25:2181 \
+juris/zkui
+
 
 
 ```

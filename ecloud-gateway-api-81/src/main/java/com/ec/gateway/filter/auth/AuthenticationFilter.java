@@ -1,6 +1,8 @@
 package com.ec.gateway.filter.auth;
 
 
+import cn.hutool.bloomfilter.BloomFilter;
+import cn.hutool.bloomfilter.BloomFilterUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.ec.commons.constant.RedisKeyConstant;
@@ -11,7 +13,7 @@ import com.ec.commons.util.IpUtil;
 import com.ec.commons.util.StringUtilExtend;
 import com.ec.commons.util.ret.R;
 import com.ec.gateway.schedules.LogPushSchedule;
-import com.ec.gateway.utils.RedisUtil;
+import com.edward.redis.template.RedisUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

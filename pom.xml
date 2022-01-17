@@ -30,7 +30,7 @@
         <module>ecloud-uid-generator-api-88</module>
         <module>ecloud-int-order-71</module>
         <module>ecloud-int-product-61</module>
-        <!--        <module>infrastructure/ecloud-initialize-10</module>-->
+        <module>infrastructure/ecloud-initialize-10</module>
         <module>canal-consumer-sync-service-1001</module>
         <module>infrastructure/redis-spring-boot-starter</module>
         <module>ecloud-apis</module>
@@ -65,7 +65,6 @@
 
         <zookeeper.version>3.7.0</zookeeper.version>
         <junit.version>4.12</junit.version>
-        <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.18.22</lombok.version>
         <hutool.version>5.7.16</hutool.version>
         <mysql.version>8.0.21</mysql.version>

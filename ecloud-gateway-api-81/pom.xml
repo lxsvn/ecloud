@@ -41,11 +41,22 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
 
         <!--引入kafka依赖-->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!--Redis-->
+        <dependency>
+            <groupId>com.edward.redis</groupId>
+            <artifactId>redis-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

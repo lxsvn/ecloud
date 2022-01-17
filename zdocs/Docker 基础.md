@@ -41,7 +41,18 @@ docker-compose version
 
 ```shell
 docker rm -f $(docker ps -qa)
+
 ``` 
+
+模糊删除容器
+
+```shell
+#删除容器名包含xxxx的全部容器
+docker rm -f $(docker ps -a |grep xxxx)
+
+#暂停容器名包含xxxx的全部容器
+docker stop $(docker ps -a |grep xxxx)
+```
 
 启动已有容器：
 
@@ -74,4 +85,16 @@ dokcer stats
 ```shell
 docker exec -it 容器id /bin/bash
 
+```
+
+特殊
+```shell
+docker挂载文件夹！
+宿主机本地先新建空白文件夹，里面不要有任何东西！
+容器启动成功后，在新建文件!
+```
+
+```shell
+#查看端口占用
+netstat -ntulp |grep 6666
 ```

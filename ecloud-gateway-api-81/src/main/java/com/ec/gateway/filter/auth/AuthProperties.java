@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * 验证权限配置
  *
- * @author pangu
- * @date 2020-10-28
+ * @author edward
+ * @date 2022-01-07
  */
 @Data
 @RefreshScope

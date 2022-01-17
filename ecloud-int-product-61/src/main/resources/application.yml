@@ -45,16 +45,14 @@ spring:
     props:
       sql-show: true
 
-  redis:
-    database: 2
-    #redis服务器地址
-    host: 47.104.80.250
-    #redis连接端口号
-    port: 6379
+  redis: # redis-cluster 集群模式下，不支持切换数据库
     #redis连接密码
     password: ED888888
     #redis连接超时时间（毫秒）
     timeout: 10000
+    cluster:
+      nodes: 47.104.80.250:6379,47.104.80.250:6380,47.104.80.250:6381,47.104.80.250:6382,47.104.80.250:6383,47.104.80.250:6384
+
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml

@@ -1,6 +1,7 @@
 package com.ec.account.controller;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONUtil;
 import com.ec.account.service.AccountService;
 import com.ec.commons.constant.RedisKeyConstant;
@@ -42,11 +43,14 @@ public class RegisterController {
         if (info == null)
             return R.fail("登录失败！用户名或密码错误！");
 
-
-        //生成token
+        //生成token -> jwt
         String token = JwtUtil.sign(
                 info.getNativeId(),
                 info.getPwd());
+
+        //jwt MD5处理。减少网络传输等。
+        //token 最终使用的是md5的结果
+        token = SecureUtil.md5(token);
 
         Map<String, Object> res = new HashMap<>();
         res.put("token", token);
