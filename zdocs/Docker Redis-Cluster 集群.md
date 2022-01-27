@@ -158,7 +158,7 @@ services:
 
 ```shell
 #生成启动Redis集群容器
-docker-compose up -d .
+docker-compose up -d
 ```
 
 ## 创建redis-cluster集群

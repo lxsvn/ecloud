@@ -40,7 +40,7 @@ nacos.cmdb.eventTaskInterval=10
 nacos.cmdb.labelTaskInterval=300
 nacos.cmdb.loadDataAtStart=false
 db.num=1
-db.url.0=jdbc:mysql://172.29.33.25:3306/ecloud_nacos_config?serverTimezone=GMT%2B8&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
+db.url.0=jdbc:mysql://172.29.33.25:3306/ecloud_nacos_manager?serverTimezone=GMT%2B8&characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
 db.user=root
 db.password=E@w123456
 ### The auth system to use, currently only 'nacos' is supported:
@@ -87,7 +87,7 @@ docker run \
 -v /home/nacos/conf/application.properties:/home/nacos/conf/application.properties \
 --name nacos -d \
 -p 8848:8848 -p 9848:9848 -p 9849:9849 \
-nacos/nacos-server:2.0.3
+nacos/nacos-server:v2.0.4
 ```
 
 ## sentinel
@@ -101,6 +101,7 @@ docker pull bladex/sentinel-dashboard:1.7.2
 
 # 2. 运行sentinel
 docker run --name sentinel -d -p 8858:8858 bladex/sentinel-dashboard:1.7.2
+docker run --name sentinel2 -d -p 8859:8858 bladex/sentinel-dashboard:1.7.2
 ```
 
 ## seata 分布式微服务一致性解决方案
@@ -110,7 +111,7 @@ docker run --name sentinel -d -p 8858:8858 bladex/sentinel-dashboard:1.7.2
 ```shell
 
 # 1. 安装镜像
-docker pull seataio/seata-server:l.4.2
+docker pull seataio/seata-server:1.4.2
 
 # 新建seata配置数据库https://github.com/seata/seata/blob/develop/script/server/db/mysql.sql
 # 根据使用不同的seata模式，在每个数据库中新增对应的表，如AT(默认)，新建undo_log:https://github.com/seata/seata/blob/develop/script/client/at/db/mysql.sql
@@ -121,10 +122,22 @@ docker pull seataio/seata-server:l.4.2
 mkdir /home/seata-server
 
 ## 2.2 启动并挂载
+# 
 docker run -d \
 --name seata-server \
 -p 8091:8091  \
--e SEATA_IP=47.104.247.85 \
+-e SEATA_IP=47.104.80.250 \
+-e SEATA_PORT=8091   \
+-e SEATA_CONFIG_NAME=file:/root/seata-config/registry \
+-v /home/seata-server/:/root/seata-config \
+seataio/seata-server:1.4.2
+
+docker cp seata-server:/root/seata-config /home/seata-server
+
+docker run -d \
+--name seata \
+-p 8091:8091  \
+-e SEATA_IP=47.104.80.250 \
 -e SEATA_PORT=8091   \
 -e SEATA_CONFIG_NAME=file:/root/seata-config/registry \
 -v /home/seata-server/:/root/seata-config \
@@ -136,8 +149,9 @@ seataio/seata-server:1.4.2
 ## 3.1 创建配置文件
 #https://github.com/seata/seata/tree/develop/script/config-center/nacos
 #在/home/seata-server下，分别创建config.txt、file.conf、registry.conf、nacos-config.sh
+touch config.txt file.conf registry.conf nacos-config.sh
 
 ##运行nacos-config.sh，使得配置到nacos
-sh nacos-config.sh -h 47.104.247.85 -g SEATA_GROUP
+sh nacos-config.sh -h 47.104.80.250 -g SEATA_GROUP
 
 ```

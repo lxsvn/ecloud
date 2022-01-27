@@ -50,12 +50,12 @@ public class RegisterController {
 
         //jwt MD5处理。减少网络传输等。
         //token 最终使用的是md5的结果
-        token = SecureUtil.md5(token);
+       String tokenMD5 = SecureUtil.md5(token);
 
         Map<String, Object> res = new HashMap<>();
         res.put("token", token);
         redisTemplate.setEx(
-                RedisKeyConstant.AUTH_TOKEN + token,
+                RedisKeyConstant.AUTH_TOKEN + tokenMD5,
                 JSONUtil.toJsonStr(info), 10, TimeUnit.DAYS);
         return R.success("登录成功！", res);
     }

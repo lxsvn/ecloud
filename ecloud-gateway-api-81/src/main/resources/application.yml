@@ -38,11 +38,10 @@ spring:
             - StripPrefix=1
 
   redis:
-    database: 2
     #redis服务器地址
-    host: 47.104.80.250
-    #redis连接端口号
-    port: 6379
+    cluster:
+      nodes: 47.104.80.250:6379,47.104.80.250:6380,47.104.80.250:6381,47.104.80.250:6382,47.104.80.250:6383,47.104.80.250:6384
+      max-redirects: 3
     #redis连接密码
     password: ED888888
     #redis连接超时时间（毫秒）

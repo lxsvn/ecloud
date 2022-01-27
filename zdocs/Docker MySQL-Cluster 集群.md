@@ -69,13 +69,60 @@ docker cp mysqld-1:/etc/mysql-cluster.cnf /home/mysql_cluster
 
 ```shell
 # 全部启动
-docker start mysql-cluster-management1 mysql-ndb1 mysql-ndb2 mysqld-1
+docker start mysql-cluster-management1 mysql-ndb1 mysql-ndb2 mysqld-1 mysqld-2
 ```
+
+
+测试
+```shell
+# 在管理节点查看集群状态
+docker run -it --net=mysql-network-cluster mysql/mysql-cluster:8.0.27 ndb_mgm
+# 查看
+show
+
+```
+
 
 ## haproxy 负载均衡
 ```shell
+ 
 mkdir -p /home/haproxy
 
-vim /home/apps/haproxy/haproxy.cfg
+vim /home/haproxy/haproxy.cfg
 
+docker run -d \
+--name haproxy \
+-p 8189:8189 \
+-p 3328:3328 \
+-p 8999:8999 \
+-v /home/haproxy:/usr/local/etc/haproxy \
+haproxy:2.3
+
+```
+
+haproxy.cfg
+
+```text
+global 
+        log         127.0.0.1 local2
+        maxconn     4000
+        daemon 
+
+defaults 
+        mode http          #默认的模式mode { tcp|http|health }，tcp是4层，http是7层，health只会返回OK 
+        retries 3          #两次连接失败就认为是服务器不可用，也可以通过后面设置 
+        option redispatch      #当serverId对应的服务器挂掉后，强制定向到其他健康的服务器 
+        option abortonclose     #当服务器负载很高的时候，自动结束掉当前队列处理比较久的链接 
+        maxconn 4096        #默认的最大连接数 
+        timeout connect 5000ms   #连接超时 
+        timeout client 30000ms   #客户端超时 
+        timeout server 30000ms   #服务器超时 
+        timeout check 2000     #=心跳检测超时 
+        log global
+listen mysql_cluster
+    bind 172.29.33.25:3829
+    mode tcp
+    balance roundrobin
+    server node1 192.168.0.10:3306
+    server node2 192.168.0.11:3306
 ```

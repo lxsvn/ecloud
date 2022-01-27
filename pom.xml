@@ -69,8 +69,8 @@
         <hutool.version>5.7.16</hutool.version>
         <mysql.version>8.0.21</mysql.version>
         <druid.version>1.2.8</druid.version>
-        <sharding.jdbc.boot.version>5.0.0</sharding.jdbc.boot.version>
         <seata.version>1.4.2</seata.version>
+        <sharding.jdbc.boot.version>5.0.0</sharding.jdbc.boot.version>
         <auth.jwt.version>3.18.1</auth.jwt.version>
         <jedis.version>4.0.1</jedis.version>
         <kafka.version>2.4.1.RELEASE</kafka.version>
@@ -123,7 +123,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <!-- Spring Cloud Alibaba -> seata -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!--begin mysql读写分离：shardingsphere。连接池：druid。驱动：connector。mybatis-->
             <dependency>
                 <groupId>mysql</groupId>

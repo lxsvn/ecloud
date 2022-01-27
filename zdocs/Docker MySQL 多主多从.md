@@ -82,6 +82,7 @@ for port in `seq 3310 3311`; do \
   mkdir -p master/${port}/conf \
   && PORT=${port} envsubst < mysql-master.tmpl > master/${port}/conf/my.cnf \
   && mkdir -p master/${port}/data \
+  && mkdir -p master/${port}/conf.d \
   && mkdir -p master/${port}/log; \
 done
 
@@ -90,6 +91,7 @@ for port in `seq 3320 3321`; do \
   mkdir -p slave/${port}/conf \
   && PORT=${port} envsubst < mysql-slave.tmpl > slave/${port}/conf/my.cnf \
   && mkdir -p slave/${port}/data \
+  && mkdir -p master/${port}/conf.d \
   && mkdir -p slave/${port}/log; \
 done
 ```
@@ -118,8 +120,10 @@ docker run -d \
 -e MYSQL_ROOT_PASSWORD=E@w123456 \
 -e TZ=Asia/Shanghai \
 -v /home/mysql_master_slave/master/3310/conf/my.cnf:/etc/mysql/my.cnf  \
+-v /home/mysql_master_slave/master/3310/conf.d:/etc/mysql/conf.d  \
 -v /home/mysql_master_slave/master/3310/data:/var/lib/mysql \
 -v /home/mysql_master_slave/master/3310/log:/logs \
+--privileged=true \
 -p 3310:3306 \
 -d mysql:8.0.27
 
@@ -131,8 +135,10 @@ docker run -d \
 -e MYSQL_ROOT_PASSWORD=E@w123456 \
 -e TZ=Asia/Shanghai \
 -v /home/mysql_master_slave/master/3311/conf/my.cnf:/etc/mysql/my.cnf  \
+-v /home/mysql_master_slave/master/3311/conf.d:/etc/mysql/conf.d  \
 -v /home/mysql_master_slave/master/3311/data:/var/lib/mysql \
 -v /home/mysql_master_slave/master/3311/log:/logs \
+--privileged=true \
 -p 3311:3306 \
 -d mysql:8.0.27
 
@@ -146,8 +152,10 @@ docker run -d \
 -e MYSQL_ROOT_PASSWORD=E@w123456 \
 -e TZ=Asia/Shanghai \
 -v /home/mysql_master_slave/slave/3320/conf/my.cnf:/etc/mysql/my.cnf  \
+-v /home/mysql_master_slave/slave/3320/conf.d:/etc/mysql/conf.d  \
 -v /home/mysql_master_slave/slave/3320/data:/var/lib/mysql \
 -v /home/mysql_master_slave/slave/3320/log:/logs \
+--privileged=true \
 -p 3320:3306 \
 -d mysql:8.0.27
 
@@ -159,8 +167,10 @@ docker run -d \
 -e MYSQL_ROOT_PASSWORD=E@w123456 \
 -e TZ=Asia/Shanghai \
 -v /home/mysql_master_slave/slave/3321/conf/my.cnf:/etc/mysql/my.cnf  \
+-v /home/mysql_master_slave/slave/3321/conf.d:/etc/mysql/conf.d  \
 -v /home/mysql_master_slave/slave/3321/data:/var/lib/mysql \
 -v /home/mysql_master_slave/slave/3321/log:/logs \
+--privileged=true \
 -p 3321:3306 \
 -d mysql:8.0.27
 ```

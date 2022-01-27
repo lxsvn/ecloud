@@ -100,67 +100,87 @@ ssl-key = /cert/server-key.pem
 
 ```
 
+PS：当前为DEV环境搭建，所以创建network、且容器分配ip的端口。正式环境直接用机器ip即可，端口可以每台机器恩3306即可。
+
 4.创建网段
 ```shell
-docker network create mysql-pxc-network-cluster --subnet=161.80.0.0/16
+docker network create mysql_mysqlpxc --subnet=161.80.0.0/16
 ```
 
 # docker-compose.yml 
 ```yaml
 version: '3.6'
 services:
- mysql-pxc1:
-  restart: always
-  image: percona/percona-xtradb-cluster:8.0
-  container_name: mysql-pxc1
-  networks:
-    default:
-      ipv4_address: 172.80.0.1
-  environment: # 环境变量
+  mysql-pxc1:
+    restart: always
+    image: percona/percona-xtradb-cluster:8.0
+    container_name: mysql-pxc1
+    networks:
+      mysqlpxc:
+        ipv4_address: 161.80.0.10
+    environment: # 环境变量
       - TZ=Asia/Shanghai
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=E@w123456
       - CLUSTER_NAME=pxc
-  ports:
-    - "3306:3306"
-    - "4444:4444"
-    - "4567:4567"
-    - "4568:4568"
-  volumes:
-   - /home/percona-xtradb-cluster8/mysql/data:/var/lib/mysql/
-   - /home/percona-xtradb-cluster8/mysql/cert:/cert/
-   - /home/percona-xtradb-cluster8/mysql/config:/etc/percona-xtradb-cluster.conf.d
-  tty: true
-  privileged: true # 拥有容器内命令执行的权限
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/percona-xtradb-cluster8/mysql/data:/var/lib/mysql/
+      - /home/percona-xtradb-cluster8/mysql/cert:/cert/
+      - /home/percona-xtradb-cluster8/mysql/config:/etc/percona-xtradb-cluster.conf.d
+    tty: true
+    privileged: true # 拥有容器内命令执行的权限
  
- mysql-pxc2:
-  restart: always
-  image: percona/percona-xtradb-cluster:8.0
-  container_name: mysql-pxc2
-  networks:
-    default:
-      ipv4_address: 172.80.0.2
-  environment: # 环境变量
+  mysql-pxc2:
+    restart: always
+    image: percona/percona-xtradb-cluster:8.0
+    container_name: mysql-pxc2
+    networks:
+      mysqlpxc:
+        ipv4_address: 161.80.0.11
+    environment: # 环境变量
       - TZ=Asia/Shanghai
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=E@w123456
       - CLUSTER_NAME=pxc
       - CLUSTER_JOIN=mysql-pxc1
-  ports:
-    - "3306:3306"
-    - "4444:4444"
-    - "4567:4567"
-    - "4568:4568"
-  volumes:
-   - /home/percona-xtradb-cluster8/mysql/data:/var/lib/mysql/
-   - /home/percona-xtradb-cluster8/mysql/cert:/cert/
-   - /home/percona-xtradb-cluster8/mysql/config:/etc/percona-xtradb-cluster.conf.d
-  tty: true
-  privileged: true # 拥有容器内命令执行的权限
+    ports:
+      - "3307:3306"
+    tty: true
+    privileged: true # 拥有容器内命令执行的权限
 
- 
+  mysql-pxc3:
+    restart: always
+    image: percona/percona-xtradb-cluster:8.0
+    container_name: mysql-pxc3
+    networks:
+      mysqlpxc:
+        ipv4_address: 161.80.0.12
+    environment: # 环境变量
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=E@w123456
+      - CLUSTER_NAME=pxc
+      - CLUSTER_JOIN=mysql-pxc1
+    ports:
+      - "3308:3306"
+    tty: true
+    privileged: true # 拥有容器内命令执行的权限
+
 networks:
-  default:
-    external:
-      name: mysql-pxc-network-cluster
+  mysqlpxc:
+    name: mysql_mysqlpxc
 ```
 
+测试
+```shell
+# 进入其中一个容器：
+docker exec -it mysql-pxc1 /bin/bash 
+
+> mysql -hmysql-pxc1 -uroot -pE@w123456
+> create database test1
+
+# 切换到其他节点数据库，查看是否同步创建数据库成功
+docker exec -it mysql-pxc2 /bin/bash 
+> mysql -uroot -pE@w123456 -P3307
+> create database test1
+```
  

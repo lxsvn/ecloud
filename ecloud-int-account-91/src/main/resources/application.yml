@@ -20,31 +20,19 @@ spring:
 
   # 配置读写分离 & 分表
   shardingsphere:
-    # 读写分离数据源：一主、一从
+    # 读写分离数据源：服务端多主多长，通过haproxy后，表现为一主、一从
     datasource:
-      names: master1,master2,slave1,slave2
-      master1:
+      names: master,slave
+      master:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver       #mysql驱动包
-        url: jdbc:mysql://47.104.80.250:3310/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.80.250:3333/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
-      master2:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.80.250:3311/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
-        password: E@w123456
-      slave1:
+      slave:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver       #mysql驱动包
-        url: jdbc:mysql://47.104.80.250:3320/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
-        password: E@w123456
-      slave2:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver        #mysql驱动包
-        url: jdbc:mysql://47.104.80.250:3321/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.104.80.250:3334/ecloud_account?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: root
         password: E@w123456
 
@@ -56,12 +44,8 @@ spring:
             type: ROUND_ROBIN
         data-sources:
           msm:
-            write-data-source-name: master1
-            read-data-source-names: slave1
-            load-balancer-name: round_robin
-          mss:
-            write-data-source-name: master2
-            read-data-source-names: slave2
+            write-data-source-name: master
+            read-data-source-names: slave
             load-balancer-name: round_robin
 
     # 打开sql输出日志

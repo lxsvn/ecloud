@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import javax.annotation.Resource;
+import java.util.concurrent.ExecutionException;
 
 @DubboService
 @Slf4j
@@ -46,6 +47,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void deductStock(DeductStockDTO dto) {
-        productDao.deductStock(dto.getSno(), dto.getQuantity());
+        throw new NullPointerException();
+        //productDao.deductStock(dto.getSno(), dto.getQuantity());
     }
 }

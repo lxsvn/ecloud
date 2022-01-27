@@ -40,4 +40,28 @@ public class OrderController extends BaseController {
         }
         return R.fail(vo.getMsg());
     }
-}
+
+    @PostMapping("/createTXOrder")
+    public R createTXOrder(@RequestBody CreateOrderDTO dto) {
+        dto.setNativeId(getNativeId());
+
+        CreateOrderVO vo = new CreateOrderVO();
+        try {
+
+            //创建订单
+            CreateOrderBO bo = orderService.createTXOrder(dto);
+
+            if (bo.isSuccess()) {
+                vo.setOrderNo("ED" + bo.getOrderNo().toString());
+                return R.success("分布式事务订单创建成功！", vo);
+            }
+
+            vo.setMsg(bo.getMsg());
+        } catch (Exception ex) {
+            vo.setMsg("分布式事务订单创建异常。请稍后再试！" + ex.getMessage());
+        }
+        return R.fail(vo.getMsg());
+    }
+
+
+    }

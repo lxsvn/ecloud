@@ -61,6 +61,12 @@ docker start 容器id
 
 ```
 
+向容器发送命令，默认kill：
+```shell
+# 例当haproxy挂载配置文件haproxy.cfg发生更改时，无需重启容器
+docker kill -s HUP haproxy
+
+```
 生成镜像：
 
 ```shell

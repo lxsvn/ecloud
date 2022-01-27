@@ -12,4 +12,8 @@ public interface OrderService {
      * */
     CreateOrderBO createOrder(CreateOrderDTO bo);
 
+    /**
+     * 创建订单（分布式事务）
+     * */
+     CreateOrderBO createTXOrder(CreateOrderDTO dto);
  }
