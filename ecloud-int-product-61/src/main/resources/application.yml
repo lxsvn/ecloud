@@ -12,7 +12,7 @@ spring:
 
   # 配置读写分离 & 分表
   shardingsphere:
-    # 读写分离数据源：服务端多主多长，通过haproxy后，表现为一主、一从
+    # 读写分离数据源：服务端多主多从，通过haproxy后，表现为一主、一从
     datasource:
       names: d0,d1
       d0:
